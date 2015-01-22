@@ -14,7 +14,8 @@
      * limitations under the License.
      */
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.yahoo.sshd</groupId>
@@ -183,7 +184,8 @@
                                 </excludes>
                             </artifactSet>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.yahoo.sshd.server.Sshd</mainClass>
                                 </transformer>
                             </transformers>
@@ -264,6 +266,123 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-rpm</id>
+                        <goals>
+                            <goal>rpm</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <license>ASL2 (c) 2015, Yahoo Inc.</license>
+                    <distribution>Yahoo Inc</distribution>
+                    <group>Application/Ssh</group>
+                    <packager>Yahoo Inc</packager>
+                    <prefix>/usr/local</prefix>
+                    <changelogFile>src/changelog</changelogFile>
+                    <defineStatements>
+                        <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+                    </defineStatements>
+                    <mappings>
+                        <mapping>
+                            <directory>/usr/local/bin/landfill</directory>
+                            <filemode>440</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                            <sources>
+                                <source>
+                                    <location>target/classes</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/usr/local/doc/landfill</directory>
+                            <documentation>true</documentation>
+                            <filemode>444</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                            <sources>
+                                <source>
+                                    <location>target/site</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/usr/local/lib</directory>
+                            <filemode>750</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                            <dependency>
+                                <includes>
+                                    <include>org.bouncycastle*:*</include>
+                                    <include>org.slf4j*:*</include>
+                                    <include>log4j:*</include>
+                                    <include>ch.qos.logback:*</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>junit:junit</exclude>
+                                </excludes>
+                            </dependency>
+                        </mapping>
+                        <mapping>
+                            <directory>/usr/local/bin</directory>
+                            <filemode>750</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                            <sources>
+                                <source>
+                                    <location>src/main/bin</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/usr/local/oldbin</directory>
+                            <filemode>750</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                            <sources>
+                                <softlinkSource>
+                                    <location>/usr/local/bin</location>
+                                </softlinkSource>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/usr/local/conf/landfill</directory>
+                            <configuration>true</configuration>
+                            <filemode>640</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                            <sources>
+                                <source>
+                                    <location>src/main/conf</location>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/usr/local/log/landfill</directory>
+                            <filemode>750</filemode>
+                            <username>dumper</username>
+                            <groupname>dumpgroup</groupname>
+                        </mapping>
+                    </mappings>
+                    <preinstallScriptlet>
+                        <script>echo "installing now"</script>
+                    </preinstallScriptlet>
+<!--                     <postinstallScriptlet> -->
+<!--                         <scriptFile>src/main/scripts/postinstall</scriptFile> -->
+<!--                         <fileEncoding>utf-8</fileEncoding> -->
+<!--                     </postinstallScriptlet> -->
+<!--                     <preremoveScriptlet> -->
+<!--                         <scriptFile>src/main/scripts/preremove</scriptFile> -->
+<!--                         <fileEncoding>utf-8</fileEncoding> -->
+<!--                     </preremoveScriptlet> -->
+                </configuration>
             </plugin>
         </plugins>
 
@@ -346,7 +465,7 @@
                 <artifactId>javassist</artifactId>
                 <version>3.11.0.GA</version>
             </dependency>
-            <!--  fixed by https://github.com/JFrogDev/artifactory-client-java/pull/51/ -->
+            <!-- fixed by https://github.com/JFrogDev/artifactory-client-java/pull/51/ -->
             <dependency>
                 <artifactId>http-builder</artifactId>
                 <groupId>org.codehaus.groovy.modules.http-builder</groupId>
@@ -400,13 +519,13 @@
             </exclusions>
         </dependency>
         <dependency>
-          <groupId>org.fusesource.jansi</groupId>
-          <artifactId>jansi</artifactId>
-          <version>1.11</version>
-          <scope>compile</scope>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+            <version>1.11</version>
+            <scope>compile</scope>
         </dependency>
 
-       <dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>

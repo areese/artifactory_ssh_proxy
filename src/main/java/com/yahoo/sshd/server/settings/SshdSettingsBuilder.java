@@ -59,7 +59,7 @@ public class SshdSettingsBuilder {
     @Deprecated
     private static final String SYSTEM_NAME = "sshd_proxy";
 
-    private static final String SYSTEM_NAME_DIR = File.separator + "sshd_proxy" + File.separator;
+    private static final String SYSTEM_NAME_DIR = File.separator + SYSTEM_NAME + File.separator;
 
     /**
      * getRoot() is prepends to this.
@@ -382,6 +382,7 @@ public class SshdSettingsBuilder {
         return port;
     }
 
+    @Deprecated
     protected String getSystemName() {
         return SYSTEM_NAME;
     }

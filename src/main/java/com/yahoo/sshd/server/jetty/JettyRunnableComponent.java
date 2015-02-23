@@ -14,8 +14,6 @@ package com.yahoo.sshd.server.jetty;
 
 import java.io.IOException;
 
-import org.eclipse.jetty.server.Server;
-
 import com.yahoo.sshd.utils.RunnableComponent;
 
 /**
@@ -28,7 +26,7 @@ public class JettyRunnableComponent implements RunnableComponent {
 
     private int jettyPort;
     private String jettyWebAppDir;
-    private Server server;
+    private JettyServer server;
 
     public JettyRunnableComponent(final int jettyPort, final String jettyWebAppDir) {
         this.jettyPort = jettyPort;
@@ -42,7 +40,8 @@ public class JettyRunnableComponent implements RunnableComponent {
                 return;
             }
 
-            server = JettyServer.newServer(jettyPort, jettyWebAppDir);
+            server = new JettyServer(jettyPort, jettyWebAppDir, null);
+            server.setup();
             server.start();
         } catch (Exception e) {
             throw new RuntimeException(e);
